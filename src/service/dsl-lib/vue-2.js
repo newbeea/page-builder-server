@@ -112,13 +112,13 @@ module.exports = function(schema, option) {
   const parseComponentProps = (propsConfig) => {
     const getDefault = (type, defaultValue) => {
       if (type === 'String') {
-        return `'${defaultValue}'`
+        return `'${defaultValue || ''}'`
       }
     }
     for (let key in propsConfig) {
       let value = propsConfig[key];
       props.push(`
-        ${key}: {
+        ${value.input.config.prop}: {
           type: ${value.input.config.type},
           default: () => (${getDefault(value.input.config.type, value.input.config.default)})
         }
@@ -343,19 +343,34 @@ module.exports = function(schema, option) {
 
     let xml;
     let props = '';
-
+    Object.keys(schema._props).forEach((key) => {
+      if (!schema.props[key]) {
+        schema.props[key] = ''
+      }
+    })
     Object.keys(schema.props).forEach((key) => {
       if ([ 'classes', 'style', 'text', 'src', 'lines', 'dealGradient' ].indexOf(key) === -1) {
-        props += ` ${parsePropsKey(key, schema.props[key])}=${parseProps(schema.props[key])}`;
+        if (schema._props && schema._props[key]) {
+          props += ` ${parsePropsKey(key, schema.props[key])}="${schema._props[key].input.config.prop}"`;
+        } else {
+          props += ` ${parsePropsKey(key, schema.props[key])}=${parseProps(schema.props[key])}`;
+        }
+        
       }
     });
     switch (type) {
       case 'text':
-        const innerText = parseProps(schema.props.text, true);
+        let innerText = parseProps(schema.props.text, true);
+        if (schema._props?.text) {
+          innerText = `{{${schema._props.text.input.config.prop}}}`
+        }
         xml = `<span${classString}${props}>${innerText}</span> `;
         break;
       case 'image':
         let source = parseProps(schema.props.src, false);
+        if (schema._props?.src) {
+          source = `${schema._props.src.input.config.prop}`
+        }
         if (!source.match('"')) {
           source = `"${source}"`;
           xml = `<img${classString}${props} :src=${source} /> `;
@@ -377,7 +392,7 @@ module.exports = function(schema, option) {
         if (schema.children && schema.children.length) {
           xml = `<div${classString}${props}>${transform(schema.children)}</div>`;
         } else {
-          xml = `<div${classString}${props} />`;
+          xml = `<${type}${classString}${props} ></${type}>`;
         }
     }
 
