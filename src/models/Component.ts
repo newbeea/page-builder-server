@@ -45,6 +45,7 @@ export default class Component {
 
   @Column({
     type: 'json',
+    nullable: true,
   })
   props: Object;
 

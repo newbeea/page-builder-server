@@ -27,7 +27,12 @@ export default class Panel {
   title: string;
 
   @Column({
+  })
+  desc: string;
+
+
+  @Column({
     nullable: true,
   })
-  previewUrl: string;
+  preview: string;
 }

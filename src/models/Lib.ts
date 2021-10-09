@@ -29,6 +29,7 @@ export default class Lib {
 
   @Column({
     type: 'json',
+    nullable: true,
   })
   tags: Object;
 

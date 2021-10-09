@@ -1,4 +1,4 @@
-import { Body, Get, Param } from '@midwayjs/decorator';
+import { ALL, Body, Get, Param } from '@midwayjs/decorator';
 import { Inject, Controller, Post, Provide, Query } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Context } from 'egg';
@@ -58,7 +58,6 @@ export class APIController {
 
   @Get('/pages')
   async getPages(@Query() pageIndex: number, @Param() pageSize = 10) {
-    console.log(pageIndex, pageSize)
     let builder = await createQueryBuilder('Page')
     if (pageIndex) {
       builder = builder.skip(pageSize * (pageIndex - 1));
@@ -91,6 +90,7 @@ export class APIController {
 
   @Post('/components')
   async createComponent(@Body() lib: Lib, @Body() components: Component[]) {
+    console.log('createComponent', lib, components)
     const l = new Lib();
     Object.assign(l, lib);
     await this.libRepo.save(l)
@@ -116,6 +116,14 @@ export class APIController {
   async getPanels() {
     const panels = await this.panelRepo.find();
     return { success: true, message: 'OK', data: panels };
+  }
+
+  @Post('/panels')
+  async createPanel(@Body(ALL) panel: Panel) {
+    const p = new Panel();
+    Object.assign(p, panel);
+    await this.panelRepo.save(p);
+    return { success: true, message: 'OK', data: {} };
   }
 
   @Get('/components')
