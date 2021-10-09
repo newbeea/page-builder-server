@@ -21,9 +21,9 @@ export default (appInfo: EggAppInfo) => {
     replaceEggLogger: true,
   };
 
-  // config.security = {
-  //   csrf: false,
-  // };
+  config.security = {
+    csrf: false,
+  };
 
   config.cors = { // 解决跨域访问
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
