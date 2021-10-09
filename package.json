@@ -1,5 +1,5 @@
 {
-  "name": "my-midway-project",
+  "name": "page-builder-server",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -35,8 +35,8 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=my-midway-project --framework=@midwayjs/web",
-    "stop": "egg-scripts stop --title=my-midway-project",
+    "start": "egg-scripts start --title=page-builder-server --framework=@midwayjs/web",
+    "stop": "egg-scripts stop --title=page-builder-server",
     "start_build": "npm run build && cross-env NODE_ENV=development midway-bin dev",
     "dev": "cross-env ets && cross-env NODE_ENV=development midway-bin dev --ts",
     "test": "midway-bin test --ts",
